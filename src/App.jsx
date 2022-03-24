@@ -26,7 +26,6 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Seoul</h1>
-        <h2>Busan</h2>
         <Course course={course} totalExercises={totalExercises} />
       </header>
     </div>
