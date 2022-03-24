@@ -18,12 +18,15 @@ function App() {
     }
   ]
 
+  // calculate the total of exercises
+  const totalExercises = course.reduce((total, course) => total + course.exercises, 0);
+
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Seoul</h1>
-        <Course course={course} />
+        <Course course={course} totalExercises={totalExercises} />
       </header>
     </div>
   )
