@@ -1,6 +1,7 @@
 function Course({ course, totalExercises }) {
   return (
     <>
+    <span>Busan</span>
       <ul>
         {course.map((course) => (
           <li key={course.id}>
