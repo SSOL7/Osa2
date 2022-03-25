@@ -45,10 +45,18 @@ function App() {
         }
       ]
     }
-  ]
+  ];
 
   // calculate total of exercises
-  const totalExercises = course.reduce((total, course) => total + course.exercises, 0);
+  const totalExercises = () => {
+    let total = 0
+    course.forEach(course => {
+      course.parts.forEach(part => {
+        total += part.exercises
+      })
+    })
+    return total
+  }
 
 
   return (
@@ -56,7 +64,6 @@ function App() {
       <header className="App-header">
         <h1>Seoul</h1>
         <Course course={course} totalExercises={totalExercises} />
-
       </header>
     </div>
   )
