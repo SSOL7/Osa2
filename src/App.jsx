@@ -13,11 +13,19 @@ function App() {
     if (inputValue === "") return alert("Name is required");
     // check if name exists in todos
     const nameExists = todos.some(todo => todo.name === inputValue);
+    const noteObject = {
+      content: inputValue,
+      date: new Date().toLocaleDateString('fi-FI'),
+      important: Math.random() > 0.5,
+      id: todos.length + 1,
+    }
     if (nameExists) return alert("Name already exists on the list");
     const newArr = todos.slice();
     newArr.splice(0, 0, { name: inputValue, done: false });
-    setTodos(newArr);
+    setTodos(newArr.concat(noteObject));
+    console.log(noteObject);
     setInputValue("");
+    return noteObject;
   };
 
   const _handleBntClick = ({ type, index }) => {
