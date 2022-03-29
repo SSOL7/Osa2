@@ -5,7 +5,7 @@ export default function ListItem(props) {
   return (
     <li style={{ textDecoration: done ? "line-through" : "" }}>
       {name}
-      {!done ? <button onClick={props.completed}>Completed</button> : ""}
+      {/* {!done ? <button onClick={props.completed}>Completed</button> : ""} */}
       <button onClick={props.remove}>Remove</button>
     </li>
   );

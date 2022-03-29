@@ -37,15 +37,14 @@
   }
 }
 
-button {
-  font-size: calc(10px + 2vmin);
-}
-
 input {
   font-size: calc(10px + 2vmin);
   margin-right: 1rem;
+  background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
 }
 
 button {
   margin-right: 1rem;
+  background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);
+  margin-left: 4rem;
 }

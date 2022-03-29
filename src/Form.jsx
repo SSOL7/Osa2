@@ -7,9 +7,9 @@ export default function Form(props) {
         type="text"
         value={props.value}
         onChange={props.onChange}
-        placeholder="Ex.: meeting at 4:20"
+        placeholder="Add Person"
       />
-      <button type="submit">Add ToDo</button>
+      <button type="submit">Add person</button>
     </form>
   );
 }

@@ -5,26 +5,25 @@ import Form from "./Form";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
-  const [todos, setTodos] = useState([
-    { name: "Arto Hellas" },
-  ]);
+  const [todos, setTodos] = useState([]);
 
   const _handleSubmit = e => {
     e.preventDefault();
-    if (inputValue === "") return alert("Task name is required");
-
+    // check if input is empty
+    if (inputValue === "") return alert("Name is required");
+    // check if name exists in todos
+    const nameExists = todos.some(todo => todo.name === inputValue);
+    if (nameExists) return alert("Name already exists on the list");
     const newArr = todos.slice();
     newArr.splice(0, 0, { name: inputValue, done: false });
     setTodos(newArr);
     setInputValue("");
   };
 
-  //
   const _handleBntClick = ({ type, index }) => {
     const newArr = todos.slice();
     if (type === "remove") newArr.splice(index, 1);
-    else if (type === "completed") newArr[index].done = true;
-
+    // else if (type === "completed") newArr[index].done = true;
     return setTodos(newArr);
   };
 
@@ -41,7 +40,7 @@ function App() {
             key={index}
             todo={todo}
             remove={() => _handleBntClick({ type: "remove", index })}
-            completed={() => _handleBntClick({ type: "completed", index })}
+            // completed={() => _handleBntClick({ type: "completed", index })}
           />
         ))}
       </ul>
