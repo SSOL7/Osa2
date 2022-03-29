@@ -1,12 +1,17 @@
 import React from "react";
 
 export default function ListItem(props) {
-  const { name, done } = props.todo;
+  // const { name } = props.todo;
   return (
-    <li style={{ textDecoration: done ? "line-through" : "" }}>
-      {name}
-      {/* {!done ? <button onClick={props.completed}>Completed</button> : ""} */}
-      <button onClick={props.remove}>Remove</button>
-    </li>
+    <>
+    </>
+  // <ol>
+  //   <li>
+  //     <h1>
+  //       {name}
+  //     </h1>
+  //   </li>
+  // </ol>
+    // <button onClick={props.remove}>Remove</button>
   );
 }
