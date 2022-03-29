@@ -1,69 +1,50 @@
+import React, { useState } from "react";
 import './App.css'
-import Course from './Course'
+import ListItem from "./ListItem";
+import Form from "./Form";
 
 function App() {
-  const course = [
-    {
-      name: 'Half Stack application development',
-      id: 1,
-      parts: [
-        {
-          name: 'Fundamentals of React',
-          exercises: 10,
-          id: 1
-        },
-        {
-          name: 'Using props to pass data',
-          exercises: 7,
-          id: 2
-        },
-        {
-          name: 'State of a component',
-          exercises: 14,
-          id: 3
-        },
-        {
-          name: 'Redux',
-          exercises: 11,
-          id: 4
-        }
-      ]
-    }, 
-    {
-      name: 'Node.js',
-      id: 2,
-      parts: [
-        {
-          name: 'Routing',
-          exercises: 3,
-          id: 1
-        },
-        {
-          name: 'Middlewares',
-          exercises: 7,
-          id: 2
-        }
-      ]
-    }
-  ];
+  const [inputValue, setInputValue] = useState("");
+  const [todos, setTodos] = useState([
+    { name: "Arto Hellas" },
+  ]);
 
-  // calculate total of exercises
-  const totalExercises = () => {
-    let total = 0
-    course.forEach(course => {
-      course.parts.forEach(part => {
-        total += part.exercises
-      })
-    })
-    return total
-  }
+  const _handleSubmit = e => {
+    e.preventDefault();
+    if (inputValue === "") return alert("Task name is required");
+
+    const newArr = todos.slice();
+    newArr.splice(0, 0, { name: inputValue, done: false });
+    setTodos(newArr);
+    setInputValue("");
+  };
+
+  //
+  const _handleBntClick = ({ type, index }) => {
+    const newArr = todos.slice();
+    if (type === "remove") newArr.splice(index, 1);
+    else if (type === "completed") newArr[index].done = true;
+
+    return setTodos(newArr);
+  };
 
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>Seoul</h1>
-        <Course course={course} totalExercises={totalExercises} />
+        <Form onSubmit={_handleSubmit} value={inputValue} onChange={e => setInputValue(e.target.value)} />
+        <br />
+        <ul>
+        {todos.map((todo, index) => (
+          <ListItem
+            key={index}
+            todo={todo}
+            remove={() => _handleBntClick({ type: "remove", index })}
+            completed={() => _handleBntClick({ type: "completed", index })}
+          />
+        ))}
+      </ul>
       </header>
     </div>
   )
