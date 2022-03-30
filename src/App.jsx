@@ -13,6 +13,8 @@ function App() {
   const [filteredResults, setFilteredResults] = useState([]);
   const [notes, setNotes] = useState([]);
 
+
+  // JSON SERVER STARTS WITH COMMAND: npm run server.
   useEffect(() => {
     console.log('effect')
     axios
