@@ -9,6 +9,8 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [numberInput, setNumberInput] = useState("");
   const [contacts, setContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredResults, setFilteredResults] = useState([]);
 
   const _handleSubmit = e => {
     e.preventDefault();
@@ -22,6 +24,7 @@ function App() {
       important: Math.random() > 0.5,
       id: todos.length + 1,
     };
+    // contact information object
     const phonenumbers = {
       content: numberInput,
       date: new Date().toLocaleDateString('fi-FI'),
@@ -33,6 +36,7 @@ function App() {
     setTodos(newArr.concat(todo_object));
     console.log(todo_object);
     setInputValue("");
+    // Adding contact information
     const newNum = contacts.slice();
     newNum.splice(0, 0, { number: numberInput });
     setContacts(newNum.concat(phonenumbers));
@@ -46,8 +50,19 @@ function App() {
     return setTodos(newArr);
   };
 
-
-
+  // search filter to filter todos array
+  const searchData = (value) => {
+    setSearchTerm(value)
+    if (searchTerm !== '') {
+        const filteredData = todos.filter((todo) => {
+            return Object.values(todo).join('').toLowerCase().includes(searchTerm.toLowerCase())
+        })
+        setFilteredResults(filteredData)
+    }
+    else {
+        setFilteredResults(todos);
+    }
+}
 
   return (
     <div className="App">
@@ -62,21 +77,27 @@ function App() {
           />
         <br />
 
-        {/* {todos.map((todo, index) => (
-          <ListItem
-          key={index}
-          // todo={todo}
-          remove={() => _handleBntClick({ type: "remove", index })}
-          />
-          ))} */}
-          {contacts.map((contact, index) => (
-            <Phone
-              key={index}
-              contact={contact}
-              remove={() => _handleBntClick({ type: "remove", index })}
-              todos={todos}
-            />
-          ))}
+        <input type="text" placeholder="Search" onChange={(e) => searchData(e.target.value)} />
+        {searchTerm.length > 1 ? (
+                    filteredResults.map((todo, index) => {
+                        return (
+                          <li key={index}>
+                          <h1>{todo.name}</h1>
+                        </li>
+                        )
+                    })
+                ) : (
+                    contacts.map((contact, index,) => {
+                        return (
+                        <Phone
+                          key={index}
+                          contact={contact}
+                          todos={todos}
+                          remove={() => _handleBntClick({ type: "remove", index })}
+                        />
+                        )
+                    })
+                )}
       </header>
     </div>
   )

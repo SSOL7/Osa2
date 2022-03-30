@@ -3,7 +3,6 @@ import React from 'react'
 function Phone({ contact, todos, remove }) {
   return (
   <>
-  <h1>Busan</h1>
     <ol>
         {todos.map((todo, index) => {
           return (
