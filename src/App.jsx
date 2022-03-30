@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import './App.css'
-import ListItem from "./ListItem";
 import Form from "./Form";
 import Phone from "./Phone";
 
@@ -11,6 +11,18 @@ function App() {
   const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredResults, setFilteredResults] = useState([]);
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response => {
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+  }, [])
+  console.log('render', notes.length, 'notes')
 
   const _handleSubmit = e => {
     e.preventDefault();
@@ -70,6 +82,16 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Seoul</h1>
+        <ol>
+        {notes.map((todo, index) => {
+          return (
+            <li key={index}>
+                <span>{todo.name}: </span>
+                <span>{todo.number}</span>
+              </li>
+          )      
+        })}
+    </ol>
         <Form
           onSubmit={_handleSubmit}
           value={inputValue}
@@ -86,8 +108,7 @@ function App() {
                           <li key={index}>
                           <h1>{todo.name}</h1>
                         </li>
-                        )
-                    })
+                        )})
                 ) : (
                     contacts.map((contact, index,) => {
                         return (
