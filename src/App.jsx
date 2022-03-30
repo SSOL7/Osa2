@@ -64,6 +64,8 @@ function App() {
     }
 }
 
+// Jaettu eri kmponentteihin
+
   return (
     <div className="App">
       <header className="App-header">
