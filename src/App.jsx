@@ -1,128 +1,164 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import {Routes, Route} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import './App.css'
-import Form from "./Form";
-import Phone from "./Phone";
+import Header from "./Header";
+import Country from "./Country";
+import CountryDetails from "./CountryDetails";
+import './App.css';
 
 function App() {
-  const [inputValue, setInputValue] = useState("");
-  const [todos, setTodos] = useState([]);
-  const [numberInput, setNumberInput] = useState("");
-  const [contacts, setContacts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredResults, setFilteredResults] = useState([]);
-  const [notes, setNotes] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const countriesInputRef = useRef();
+  const regionRef = useRef();
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [location, setLocation] = useState('');
+  const [weather, setWeather] = useState('');
+  const [weatherData, setWeatherData] = useState({});
 
+  const no_data = countries.status || countries.message;
 
-  // JSON SERVER STARTS WITH COMMAND: npm run server.
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/notes')
-      .then(response => {
-        console.log('promise fulfilled')
-        setNotes(response.data)
-      })
-  }, [])
-  console.log('render', notes.length, 'notes')
-
-  const _handleSubmit = e => {
-    e.preventDefault();
-    // check if input is empty
-    if (inputValue === "") return alert("Name is required");
-    // check if name exists in todos
-    const nameExists = todos.some(todo => todo.name === inputValue);
-    const todo_object = {
-      content: inputValue,
-      date: new Date().toLocaleDateString('fi-FI'),
-      important: Math.random() > 0.5,
-      id: todos.length + 1,
-    };
-    // contact information object
-    const phonenumbers = {
-      content: numberInput,
-      date: new Date().toLocaleDateString('fi-FI'),
-      id: contacts.length + 1,
-    };
-    if (nameExists) return alert("Name already exists on the list");
-    const newArr = todos.slice();
-    newArr.splice(0, 0, { name: inputValue, done: false });
-    setTodos(newArr.concat(todo_object));
-    console.log(todo_object);
-    setInputValue("");
-    // Adding contact information
-    const newNum = contacts.slice();
-    newNum.splice(0, 0, { number: numberInput });
-    setContacts(newNum.concat(phonenumbers));
-    console.log(phonenumbers);
-    setNumberInput("");
-  };
-
-  const _handleBntClick = ({ type, index }) => {
-    const newArr = todos.slice();
-    if (type === "remove") newArr.splice(index, 1);
-    return setTodos(newArr);
-  };
-
-  // search filter to filter todos array
-  const searchData = (value) => {
-    setSearchTerm(value)
-    if (searchTerm !== '') {
-        const filteredData = todos.filter((todo) => {
-            return Object.values(todo).join('').toLowerCase().includes(searchTerm.toLowerCase())
-        })
-        setFilteredResults(filteredData)
+    try {
+      // search_countries();
+      fetch_data();
+    } catch (error) {
+      console.log(error);
     }
-    else {
-        setFilteredResults(todos);
+    console.log(countries);
+  }, []);
+
+  const fetch_data = async () => {
+    const response = await fetch('https://restcountries.com/v2/all');
+    const data = await response.json();
+
+    if(data.status === 404) {
+      setCountries([]);
+      return;
     }
+
+    setCountries(data);
+  }
+
+  const url =`http://dataservice.accuweather.com/locations/v1/cities/search?apikey=0G1vgC0oQj18gUyXgyjffHPGMVcf67cS&q=${location}&language=en-us&details=true`;
+
+const search_location = (event) => {
+  event.preventDefault();
+  axios.get(url).then((response) => {
+    console.log(response.data[0].Key);
+    console.log(response.data);
+    setData(response.data);
+    console.log(data);
+    return data[0];
+  })
+  setLocation('');
 }
+if(!data) {
+  return null;
+}
+    
+const weather_url = `http://dataservice.accuweather.com/forecasts/v1/daily/1day/${weather}?apikey=0G1vgC0oQj18gUyXgyjffHPGMVcf67cS&metric=true`;
+  const search_weather = async (event) => {
+    event.preventDefault();
+    axios.get(weather_url).then((response) => {
+      console.log(response.data);
+      setWeatherData(response.data);
+      console.log(`${response.data.DailyForecasts[0].Date}`);
+      console.log(`${response.data.DailyForecasts[0].Temperature.Maximum.Value}`);
+      return data[0];
+    })
+    setWeather('');
+  };
 
-// Jaettu eri kmponentteihin
+  if(!weatherData) {
+    return null;
+  }
+
+  const showDetails = (code) => {
+    navigate(`/${code}`);
+  }
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Seoul</h1>
-        <ol>
-        {notes.map((todo, index) => {
-          return (
-            <li key={index}>
-                <span>{todo.name}: </span>
-                <span>{todo.number}</span>
-              </li>
-          )      
-        })}
-    </ol>
-        <Form
-          onSubmit={_handleSubmit}
-          value={inputValue}
-          onChange={e => setInputValue(e.target.value)}
-          number={numberInput}
-          onNumberChange={e => setNumberInput(e.target.value)}
-          />
-        <br />
+        <Header />
+        <span>Seoul</span>
+        <form onSubmit={search_weather}>
+      <h1>Search for weather</h1>
+      <input
+      value={weather}
+      onChange={event => setWeather(event.target.value)}
+      type="text"
+      name="title"
+      id="title" />
+      <br />
+      <br />
+      <input type="submit" value="Submit" className='submit-button' />
+    </form>
 
-        <input type="text" placeholder="Search" onChange={(e) => searchData(e.target.value)} />
-        {searchTerm.length > 1 ? (
-                    filteredResults.map((todo, index) => {
-                        return (
-                          <li key={index}>
-                          <h1>{todo.name}</h1>
-                        </li>
-                        )})
+
+      <form onSubmit={search_location}>
+      <h1>Search for a city</h1>
+      <input
+      value={location}
+      onChange={event => setLocation(event.target.value)}
+      type="text"
+      name="title"
+      id="title" />
+      <br />
+      <br />
+      <input type="submit" value="Submit" className='submit-button' />
+    </form>
+
+    <ul>
+  {data.map(city => {
+    return (
+      <li key={city.Key}>
+        <h3>City: {city.EnglishName}</h3>
+        <p>Country: {city.Country.EnglishName}</p>
+        <p>Administrative area: {city.AdministrativeArea.EnglishName}</p>
+        <p>Timezone code: {city.TimeZone.Code}</p>
+        <p>GMT Offset: {city.TimeZone.GmtOffset}</p>
+        <p>Latitude: {city.GeoPosition.Latitude}</p>
+        <p>Longitude: {city.GeoPosition.Longitude}</p>
+      </li>
+    )
+  })}
+</ul>
+
+          <Routes>
+            <Route path="/" element={
+              <div>
+                <input type="text" placeholder="Search for a country" ref={countriesInputRef} />
+                <select ref={regionRef} >
+                  <option value="">All</option>
+                  <option value="">Asia</option>
+                  <option value="">Oceania</option>
+                  <option value="">America</option>
+                  <option value="">Europe</option>
+                  <option value="">Africa</option>
+                </select>
+                {!no_data ? (
+                  countries?.map((country) => (
+                    <Country 
+                      key={country.alpha3Code}
+                      code={country.alpha3Code}
+                      name={country.name}
+                      capital={country.capital}
+                      population={country.population.toLocaleString()}
+                      region={country.region}
+                      flag={country.flag}
+                      showDetails={showDetails}
+                    />
+                  ))
                 ) : (
-                    contacts.map((contact, index,) => {
-                        return (
-                        <Phone
-                          key={index}
-                          contact={contact}
-                          todos={todos}
-                          remove={() => _handleBntClick({ type: "remove", index })}
-                        />
-                        )
-                    })
+                  <p>No countries found</p>
                 )}
+              </div>
+            }/>
+            <Route path="/:countryCode" element={<CountryDetails countries={countries} />}/>
+          </Routes>
       </header>
     </div>
   )
