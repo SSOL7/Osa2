@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 import './App.css'
 import Form from "./Form";
 import Phone from "./Phone";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
-  const [todos, setTodos] = useState([]);
   const [numberInput, setNumberInput] = useState("");
+  const [todos, setTodos] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredResults, setFilteredResults] = useState([]);
   const [notes, setNotes] = useState([]);
-
-
   // JSON SERVER STARTS WITH COMMAND: npm run server.
   useEffect(() => {
     console.log('effect')
@@ -34,16 +33,19 @@ function App() {
     const nameExists = todos.some(todo => todo.name === inputValue);
     const todo_object = {
       content: inputValue,
+      phone: numberInput,
       date: new Date().toLocaleDateString('fi-FI'),
       important: Math.random() > 0.5,
-      id: todos.length + 1,
+      id: uuidv4(), 
+      // id: todos.length + 1,
     };
     // contact information object
-    const phonenumbers = {
-      content: numberInput,
-      date: new Date().toLocaleDateString('fi-FI'),
-      id: contacts.length + 1,
-    };
+    // const phonenumbers = {
+    //   content: numberInput,
+    //   date: new Date().toLocaleDateString('fi-FI'),
+    //   id: uuidv4(),
+    //   // id: contacts.length + 1,
+    // };
     if (nameExists) return alert("Name already exists on the list");
     const newArr = todos.slice();
     newArr.splice(0, 0, { name: inputValue, done: false });
@@ -53,9 +55,19 @@ function App() {
     // Adding contact information
     const newNum = contacts.slice();
     newNum.splice(0, 0, { number: numberInput });
-    setContacts(newNum.concat(phonenumbers));
-    console.log(phonenumbers);
+    // setContacts(newNum.concat(phonenumbers));
+    // console.log(phonenumbers);
     setNumberInput("");
+    // axios.post('http://localhost:3001/notes', todo_object).then(response => {
+    //   setTodos(todos.concat(response.data));
+    // })
+
+    // axios post request to add contact information
+    axios.post('http://localhost:3001/notes', todo_object).then(response => {
+      setContacts(contacts.concat(response.data));
+    });
+
+
   };
 
   const _handleBntClick = ({ type, index }) => {
@@ -77,8 +89,6 @@ function App() {
         setFilteredResults(todos);
     }
 }
-
-// Jaettu eri kmponentteihin
 
   return (
     <div className="App">
