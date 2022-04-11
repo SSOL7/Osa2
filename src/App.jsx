@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './App.css'
 import Form from "./Form";
 import Phone from "./Phone";
+import Endpoint from './api/endpoint';
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -15,13 +16,9 @@ function App() {
   const [notes, setNotes] = useState([]);
   // JSON SERVER STARTS WITH COMMAND: npm run server.
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/notes')
-      .then(response => {
-        console.log('promise fulfilled')
+    Endpoint.getAll().then(response => {
         setNotes(response.data)
-      })
+    });
   }, [])
   console.log('render', notes.length, 'notes')
 
@@ -37,15 +34,7 @@ function App() {
       date: new Date().toLocaleDateString('fi-FI'),
       important: Math.random() > 0.5,
       id: uuidv4(), 
-      // id: todos.length + 1,
     };
-    // contact information object
-    // const phonenumbers = {
-    //   content: numberInput,
-    //   date: new Date().toLocaleDateString('fi-FI'),
-    //   id: uuidv4(),
-    //   // id: contacts.length + 1,
-    // };
     if (nameExists) return alert("Name already exists on the list");
     const newArr = todos.slice();
     newArr.splice(0, 0, { name: inputValue, done: false });
@@ -55,19 +44,16 @@ function App() {
     // Adding contact information
     const newNum = contacts.slice();
     newNum.splice(0, 0, { number: numberInput });
-    // setContacts(newNum.concat(phonenumbers));
-    // console.log(phonenumbers);
     setNumberInput("");
+
+    Endpoint.create(todo_object).then(response => {
+      setContacts(contacts.concat(response.data))
+      setNumberInput('');
+      });
+
     // axios.post('http://localhost:3001/notes', todo_object).then(response => {
-    //   setTodos(todos.concat(response.data));
-    // })
-
-    // axios post request to add contact information
-    axios.post('http://localhost:3001/notes', todo_object).then(response => {
-      setContacts(contacts.concat(response.data));
-    });
-
-
+    //   setContacts(contacts.concat(response.data));
+    // });
   };
 
   const _handleBntClick = ({ type, index }) => {
@@ -93,7 +79,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Seoul</h1>
         <ol>
         {notes.map((todo, index) => {
           return (
