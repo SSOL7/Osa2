@@ -50,10 +50,6 @@ function App() {
       setContacts(contacts.concat(response.data))
       setNumberInput('');
       });
-
-    // axios.post('http://localhost:3001/notes', todo_object).then(response => {
-    //   setContacts(contacts.concat(response.data));
-    // });
   };
 
   const _handleBntClick = ({ type, index }) => {
