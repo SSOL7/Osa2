@@ -8,7 +8,7 @@ function Phone({ contact, todos, remove }) {
           return (
             <li key={index}>
                 <h1>{todo.name}</h1>
-                <h1>{contact.number}</h1>
+                <h1>{contact.phone}</h1>
                 <button onClick={remove}>Remove</button>
               </li>
           )      

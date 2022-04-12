@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
+import axios from "axios";
 import './App.css'
 import Form from "./Form";
 import Phone from "./Phone";
@@ -14,13 +14,14 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredResults, setFilteredResults] = useState([]);
   const [notes, setNotes] = useState([]);
+  const [message, setMessage] = useState('');
   // JSON SERVER STARTS WITH COMMAND: npm run server.
   useEffect(() => {
     Endpoint.getAll().then(response => {
         setNotes(response.data)
     });
   }, [])
-  console.log('render', notes.length, 'notes')
+  console.log('render', notes.length - 1, 'notes')
 
   const _handleSubmit = e => {
     e.preventDefault();
@@ -33,7 +34,7 @@ function App() {
       phone: numberInput,
       date: new Date().toLocaleDateString('fi-FI'),
       important: Math.random() > 0.5,
-      id: uuidv4(), 
+      id: uuidv4(),
     };
     if (nameExists) return alert("Name already exists on the list");
     const newArr = todos.slice();
@@ -52,39 +53,60 @@ function App() {
       });
   };
 
-  const _handleBntClick = ({ type, index }) => {
-    const newArr = todos.slice();
-    if (type === "remove") newArr.splice(index, 1);
-    return setTodos(newArr);
-  };
-
+  
   // search filter to filter todos array
   const searchData = (value) => {
     setSearchTerm(value)
     if (searchTerm !== '') {
-        const filteredData = todos.filter((todo) => {
-            return Object.values(todo).join('').toLowerCase().includes(searchTerm.toLowerCase())
-        })
-        setFilteredResults(filteredData)
+      const filteredData = todos.filter((todo) => {
+        return Object.values(todo).join('').toLowerCase().includes(searchTerm.toLowerCase())
+      })
+      setFilteredResults(filteredData)
     }
     else {
-        setFilteredResults(todos);
+      setFilteredResults(todos);
     }
-}
+  }
 
+  const _handleBntClick = ({ type, index }) => {
+    const newArr = todos.slice();
+    if (type === "remove") newArr.splice(index, 1);
+    Endpoint.delete().then(response => {
+      setContacts(contacts.concat(response.data))
+      setNumberInput('');
+    });
+    return setTodos(newArr);
+  };
+
+  function handleDelete(id) {
+    if(window.confirm("Are you sure you want to delete this item?")) {
+      const newList = todos.filter((item) => item.id !== id);
+      Endpoint.delete(id).then(response => {
+        setContacts(contacts.concat(response.data))
+        setNumberInput('');
+      });
+      setTodos(newList);
+    }
+  }
+  
   return (
     <div className="App">
       <header className="App-header">
         <ol>
-        {notes.map((todo, index) => {
+        {notes.map((todo) => {
           return (
-            <li key={index}>
-                <span>{todo.name}: </span>
-                <span>{todo.number}</span>
+            <li key={todo.id}>
+                <span>Name: {todo.content}, </span>
+                <span>Phone {todo.phone}, </span>
+                <span>Date {todo.date}, </span>
+                <button type="button" onClick={() => handleDelete(todo.id)}>
+                Remove
+                </button>
               </li>
           )      
         })}
     </ol>
+
         <Form
           onSubmit={_handleSubmit}
           value={inputValue}
