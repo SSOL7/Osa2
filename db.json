@@ -1,25 +1,11 @@
 {
   "notes": [
     {
-      "content": "aaa",
-      "phone": "111",
-      "date": "12.4.2022",
-      "important": false,
-      "id": "22f1483e-8dc1-4745-bcd4-9e3fbdfed53a"
-    },
-    {
-      "content": "www",
-      "phone": "111",
-      "date": "12.4.2022",
-      "important": false,
-      "id": "a800fad6-e165-4e37-8555-638bf4889686"
-    },
-    {
-      "content": "Puni",
-      "phone": "000-111-222-3233",
+      "content": "Angegl",
+      "phone": "444-555-666",
       "date": "12.4.2022",
       "important": true,
-      "id": "144120f9-981d-4c9e-ac76-31fe019cf247"
+      "id": "9b60eee9-5268-4eac-a5c1-c2490babbf67"
     }
   ]
 }

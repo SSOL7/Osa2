@@ -67,7 +67,7 @@ function App() {
       setFilteredResults(todos);
     }
   }
-
+  
   const _handleBntClick = ({ type, index }) => {
     const newArr = todos.slice();
     if (type === "remove") newArr.splice(index, 1);
@@ -79,11 +79,13 @@ function App() {
   };
 
   function handleDelete(id) {
-    if(window.confirm("Are you sure you want to delete this item?")) {
+    if(window.confirm(`Are you sure you want to delete ${id}?`)) {
       const newList = todos.filter((item) => item.id !== id);
       Endpoint.delete(id).then(response => {
         setContacts(contacts.concat(response.data))
         setNumberInput('');
+      }).catch(error => {
+        alert(error + '' + 'This person is already deleted from the database');
       });
       setTodos(newList);
     }
