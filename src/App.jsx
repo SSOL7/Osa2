@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import axios from "axios";
 import './App.css'
 import Form from "./Form";
 import Phone from "./Phone";
 import Endpoint from './api/endpoint';
+import Error from './Error';
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -15,6 +15,9 @@ function App() {
   const [filteredResults, setFilteredResults] = useState([]);
   const [notes, setNotes] = useState([]);
   const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('some error happened...');
+
+
   // JSON SERVER STARTS WITH COMMAND: npm run server.
   useEffect(() => {
     Endpoint.getAll().then(response => {
@@ -85,7 +88,7 @@ function App() {
         setContacts(contacts.concat(response.data))
         setNumberInput('');
       }).catch(error => {
-        alert(error + '' + 'This person is already deleted from the database');
+       alert(error + '' + 'This person is already deleted from the database');
       });
       setTodos(newList);
     }
@@ -94,10 +97,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <h1>Seoul</h1>
         <ol>
         {notes.map((todo) => {
           return (
-            <li key={todo.id}>
+            <li key={todo.id} className="contacts">
                 <span>Name: {todo.content}, </span>
                 <span>Phone {todo.phone}, </span>
                 <span>Date {todo.date}, </span>
@@ -108,6 +112,7 @@ function App() {
           )      
         })}
     </ol>
+        {/* <Error message={errorMessage} /> */}
 
         <Form
           onSubmit={_handleSubmit}
