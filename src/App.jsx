@@ -13,8 +13,6 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredResults, setFilteredResults] = useState([]);
   const [notes, setNotes] = useState([]);
-  const [message, setMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('some error happened...');
 
 
   // JSON SERVER STARTS WITH COMMAND: npm run server.
