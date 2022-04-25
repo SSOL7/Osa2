@@ -1,3 +1,25 @@
 {
-  "notes": []
+  "notes": [
+    {
+      "content": "shaho",
+      "phone": "222",
+      "date": "20.4.2022",
+      "important": true,
+      "id": "b843a41a-201b-4eea-8968-6363f295b317"
+    },
+    {
+      "content": "ererer",
+      "phone": "444",
+      "date": "20.4.2022",
+      "important": true,
+      "id": "0c904bc6-ce5a-4ace-a27e-00534e6092a8"
+    },
+    {
+      "content": "shaho",
+      "phone": "111",
+      "date": "20.4.2022",
+      "important": false,
+      "id": "b33387d1-cc98-4605-9b6a-3779bced4721"
+    }
+  ]
 }

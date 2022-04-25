@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/notes/
+Content-Type: application/json
+
+{
+    "title": "My next trip",
+    "body": "I would like to go to Spain"
+}

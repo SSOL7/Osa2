@@ -4,7 +4,6 @@ import './App.css'
 import Form from "./Form";
 import Phone from "./Phone";
 import Endpoint from './api/endpoint';
-import Error from './Error';
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -21,24 +20,25 @@ function App() {
   // JSON SERVER STARTS WITH COMMAND: npm run server.
   useEffect(() => {
     Endpoint.getAll().then(response => {
-        setNotes(response.data)
+        setNotes(response.data);
+        console.log(notes);
     });
   }, [])
   console.log('render', notes.length - 1, 'notes')
 
   const _handleSubmit = e => {
     e.preventDefault();
-    // check if input is empty
+    
     if (inputValue === "") return alert("Name is required");
-    // check if name exists in todos
     const nameExists = todos.some(todo => todo.name === inputValue);
+
     const todo_object = {
-      content: inputValue,
-      phone: numberInput,
+      name: inputValue,
+      number: numberInput,
       date: new Date().toLocaleDateString('fi-FI'),
-      important: Math.random() > 0.5,
       id: uuidv4(),
     };
+
     if (nameExists) return alert("Name already exists on the list");
     const newArr = todos.slice();
     newArr.splice(0, 0, { name: inputValue, done: false });
@@ -50,8 +50,10 @@ function App() {
     newNum.splice(0, 0, { number: numberInput });
     setNumberInput("");
 
+    // AXIOS
     Endpoint.create(todo_object).then(response => {
-      setContacts(contacts.concat(response.data))
+      setContacts(contacts.concat(response.data));
+      console.log(response.data);
       setNumberInput('');
       });
   };
@@ -102,8 +104,8 @@ function App() {
         {notes.map((todo) => {
           return (
             <li key={todo.id} className="contacts">
-                <span>Name: {todo.content}, </span>
-                <span>Phone {todo.phone}, </span>
+                <span>Name: {todo.name}. </span>
+                <span>Phone {todo.number}. </span>
                 <span>Date {todo.date}, </span>
                 <button type="button" onClick={() => handleDelete(todo.id)}>
                 Remove
